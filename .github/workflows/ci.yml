@@ -1,0 +1,37 @@
+name: e2e
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      env: { description: 'Target environment', default: 'demo' }
+      tag: { description: 'Tag filter, e.g. @smoke', default: '@regression' }
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Run tests
+        run: npx playwright test --shard=${{ matrix.shard }}/4 --grep "${{ inputs.tag || '@regression' }}"
+        env:
+          ENV: ${{ inputs.env || 'demo' }}
+          ADMIN_USER: ${{ secrets.ADMIN_USER }}
+          ADMIN_PASS: ${{ secrets.ADMIN_PASS }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-shard-${{ matrix.shard }}
+          path: |
+            playwright-report
+            test-results
+            results
+          retention-days: 14
