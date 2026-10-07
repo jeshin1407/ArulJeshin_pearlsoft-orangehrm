@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,7 +21,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - name: Run tests
-        run: npx playwright test --shard=${{ matrix.shard }}/4 --grep "${{ inputs.tag || '@regression' }}"
+        run: npx playwright test --shard=${{ matrix.shard }}/2 --grep "${{ inputs.tag || '@regression' }}"
         env:
           ENV: ${{ inputs.env || 'demo' }}
           ADMIN_USER: ${{ secrets.ADMIN_USER }}
