@@ -181,7 +181,20 @@ To reduce flakiness I focus on
 - Moving repeatedly flaky tests to quarantine and running them separately
 
 ## CI pipeline
+## CI pipeline
 The CI workflow in .github/workflows/ci.yml does the following
 1. On push to main or on pull requests it starts the e2e job
 2. The e2e job installs Node, dependencies and Playwright then runs tests in parallel shards using secrets for credentials
-3. After e2e finishes the perf job
+3. After e2e finishes the perf job runs k6 performance tests
+4. Test reports for Playwright and k6 are uploaded as artifacts so they can be downloaded and checked
+
+Green CI run example
+https://github.com/jeshin1407/ArulJeshin_pearlsoft-orangehrm/actions/runs/37640000589
+
+CI run status
+
+![CI green run](screenshot asset/ci-artifacts2.png)
+
+CI artifacts
+
+![CI artifacts](screenshot asset/ci-artifacts2.png)
