@@ -1,4 +1,4 @@
-# OrangeHRM Test Automation
+# Pearlsoft - Assessment OrangeHRM Automation
 
 ## What this project does
 This project has automated tests for OrangeHRM employee module using Playwright and TypeScript.
